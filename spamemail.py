@@ -4,17 +4,21 @@ from email.header import Header
 import re
 from dns import resolver
 import socket; import smtplib
-def addr_verify(domain):
+def addr_verify(email_address):
     # email_address = 'example@example.com'
 
     # Step 1: Check email
     # Check using Regex that an email meets minimum requirements, throw an error if not
-    # addressToVerify = email_address
-
+    addressToVerify = email_address
+    # match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', addressToVerify)
+    #
+    # if match == None:
+    #     print('Bad Syntax in ' + addressToVerify)
+    #     raise ValueError('Bad Syntax')
 
     # Step 2: Getting MX record
     # Pull domain name from email address
-    domain_name = domain #email_address.split('@')[1]
+    domain_name = email_address.split('@')[1]
 
     # get the MX record for the domain
     records = resolver.query(domain_name, 'MX')
@@ -28,32 +32,24 @@ def addr_verify(domain):
     host = 'superjack5'#socket.gethostname()
 
     # SMTP lib setup (use debug level for full output)
+    server = smtplib.SMTP()
+    server.set_debuglevel(0)
 
-
-
-    with open('names.txt','r') as f:
-        with open('validaddress.txt', 'w') as a:
-            for line in f.readlines():
-                server = smtplib.SMTP()
-                server.set_debuglevel(0)
-
-                # SMTP Conversation
-                server.connect(mxRecord)
-                server.helo(host)
-                server.mail('admin@' + domain_name)
-                code, message = server.rcpt(str(line))
-                server.quit()
-                if code == 250:
-                    print('Y'+str(message))
-                    a.write(line)
-                else:
-                    print('N')
-                    print(message)
-
-
-
+    # SMTP Conversation
+    server.connect(mxRecord)
+    server.helo(host)
+    server.mail('admin@du.edu')
+    code, message = server.rcpt(str(addressToVerify))
+    server.quit()
 
     # Assume 250 as Success
+    if code == 250:
+        print('Y')
+        with open('validaddress.txt','a') as f:
+            f.write(addressToVerify)
+    else:
+        print('N')
+        print(message)
 
 
 def send():
@@ -86,8 +82,9 @@ def send():
     except smtplib.SMTPException as e:
         print(e)
 
-
-addr_verify('du.edu')
+with open('names.txt','r') as f:
+    for line in f.readlines():
+        addr_verify(line.rstrip())
 # addr_verify('fu.chen@du.edu')
 
 # myemail='anazone@foxmail.com'
