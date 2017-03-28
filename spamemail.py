@@ -28,17 +28,21 @@ def addr_verify(domain):
     host = 'superjack5'#socket.gethostname()
 
     # SMTP lib setup (use debug level for full output)
-    server = smtplib.SMTP()
-    server.set_debuglevel(0)
 
-    # SMTP Conversation
-    server.connect(mxRecord)
-    server.helo(host)
-    server.mail('admin@'+domain_name)
+
+
     with open('names.txt','r') as f:
         with open('validaddress.txt', 'w') as a:
             for line in f.readlines():
+                server = smtplib.SMTP()
+                server.set_debuglevel(0)
+
+                # SMTP Conversation
+                server.connect(mxRecord)
+                server.helo(host)
+                server.mail('admin@' + domain_name)
                 code, message = server.rcpt(str(line))
+                server.quit()
                 if code == 250:
                     print('Y'+str(message))
                     a.write(line)
@@ -47,7 +51,7 @@ def addr_verify(domain):
                     print(message)
 
 
-    server.quit()
+
 
     # Assume 250 as Success
 
