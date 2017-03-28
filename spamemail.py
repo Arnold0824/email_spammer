@@ -45,6 +45,7 @@ def addr_verify(email_address):
     # Assume 250 as Success
     if code == 250:
         print('Y')
+        print(message)
         with open('validaddress.txt','a') as f:
             f.write(addressToVerify)
     else:
