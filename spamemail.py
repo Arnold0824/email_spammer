@@ -47,7 +47,7 @@ def addr_verify(email_address):
         print('Y')
         print(message)
         with open('validaddress.txt','a') as f:
-            f.write(addressToVerify)
+            f.write(addressToVerify+'\n')
     else:
         print('N')
         print(message)
