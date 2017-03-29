@@ -1,10 +1,7 @@
-import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
-import re
 from dns import resolver
-import socket; import smtplib
-import logging
+import smtplib
 def addr_verify(email_address,i):
     # email_address = 'example@example.com'
 
@@ -45,14 +42,16 @@ def addr_verify(email_address,i):
 
     # Assume 250 as Success
     if code == 250:
-        logging.info('Y')
-        logging.info(message)
+        log('Y')
+        log(message)
         with open('validaddress.txt','a') as f:
             f.write(addressToVerify+','+str(i)+'\n')
     else:
-        logging.warning('N')
-        logging.warning(message)
-
+        log('N')
+        log(message)
+def log(msg):
+    with open('log.txt','a') as f:
+        f.write(msg)
 
 def send():
     # 第三方 SMTP 服务
