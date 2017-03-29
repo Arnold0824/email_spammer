@@ -4,6 +4,7 @@ from email.header import Header
 import re
 from dns import resolver
 import socket; import smtplib
+import logging
 def addr_verify(email_address,i):
     # email_address = 'example@example.com'
 
@@ -44,13 +45,13 @@ def addr_verify(email_address,i):
 
     # Assume 250 as Success
     if code == 250:
-        print('Y')
-        print(message)
+        logging.info('Y')
+        logging.info(message)
         with open('validaddress.txt','a') as f:
             f.write(addressToVerify+','+str(i)+'\n')
     else:
-        print('N')
-        print(message)
+        logging.warning('N')
+        logging.warning(message)
 
 
 def send():
