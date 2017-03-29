@@ -4,7 +4,7 @@ from email.header import Header
 import re
 from dns import resolver
 import socket; import smtplib
-def addr_verify(email_address):
+def addr_verify(email_address,i):
     # email_address = 'example@example.com'
 
     # Step 1: Check email
@@ -47,7 +47,7 @@ def addr_verify(email_address):
         print('Y')
         print(message)
         with open('validaddress.txt','a') as f:
-            f.write(addressToVerify+'\n')
+            f.write(addressToVerify+','+str(i)+'\n')
     else:
         print('N')
         print(message)
@@ -82,10 +82,14 @@ def send():
         print("邮件发送成功")
     except smtplib.SMTPException as e:
         print(e)
-
+i=0
 with open('names.txt','r') as f:
     for line in f.readlines():
-        addr_verify(line.rstrip())
+        try:
+            i+=1
+            addr_verify(line.rstrip(),i)
+        except:
+            continue
 # addr_verify('fu.chen@du.edu')
 
 # myemail='anazone@foxmail.com'
