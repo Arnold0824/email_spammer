@@ -2,6 +2,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 from dns import resolver
 import smtplib
+import threading
 def addr_verify(email_address,i):
     # email_address = 'example@example.com'
 
@@ -50,8 +51,9 @@ def addr_verify(email_address,i):
         log('N')
         log(message)
 def log(msg):
+    print(msg)
     with open('log.txt','a') as f:
-        f.write(msg)
+        f.write(str(msg))
 
 def send():
     # 第三方 SMTP 服务
@@ -82,14 +84,36 @@ def send():
         print("邮件发送成功")
     except smtplib.SMTPException as e:
         print(e)
-i=0
-with open('names.txt','r') as f:
-    for line in f.readlines():
-        try:
-            i+=1
-            addr_verify(line.rstrip(),i)
-        except:
-            continue
+
+def filesplit(filepath):
+    """分割文件,按照配置文件的分段上传part大小来分割文件"""
+    partnum = 0
+    inputfile = open(filepath, 'rb')  # open the fromfile
+    while True:
+        chunk = inputfile.read(10 * 1024 * 1024)
+        if not chunk:  # check the chunk is empty
+            break
+        partnum += 1
+        newfilename = filepath + ('part%04d' % partnum)
+        fileobj = open(newfilename, 'wb')  # make partfile
+        fileobj.write(chunk)  # write data into partfile
+        fileobj.close()
+    return partnum
+# addr_verify('hao.wu@illinois.edu', 0)
+def runtest(file):
+    i=0
+    with open(file,'r') as f:
+        for line in f.readlines():
+            try:
+                i+=1
+                addr_verify(line.rstrip(),i)
+            except:
+                continue
+
+if __name__=='__main__':
+    for i in range(1,5):
+        threading.Thread(target=lambda :runtest('illinoisnames.txtpart000'+str(i))).start()
+    # filesplit('c:/email_spammer/illinoisnames.txt')
 # addr_verify('fu.chen@du.edu')
 
 # myemail='anazone@foxmail.com'

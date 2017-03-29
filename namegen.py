@@ -30,13 +30,13 @@ words=[]
 # print(len(product(words, repeat=2)))
 # [print() for l in lastnames for x in product(words, repeat=2)]
 i=0
-with open('C:/spamname/names.txt','w') as f:
+with open('C:/spamname/illinoisnames.txt','w') as f:
     for l in lastnames:
         for x in product(firstnames, repeat=2):
-            f.write(''.join(x) + '.' + l + '@du.edu \n')
+            f.write(''.join(x) + '.' + l + '@illinois.edu \n')
             i+=1
-            print(str(i)+''.join(x) + '.' + l + '@du.edu \n')
+            print(str(i)+''.join(x) + '.' + l + '@illinois.edu \n')
         for x in firstnames:
-            f.write(''.join(x) + '.' + l + '@du.edu \n')
+            f.write(''.join(x) + '.' + l + '@illinois.edu \n')
             i+=1
-            print(str(i)+''.join(x) + '.' + l + '@du.edu \n')
+            print(str(i)+''.join(x) + '.' + l + '@illinois.edu \n')
